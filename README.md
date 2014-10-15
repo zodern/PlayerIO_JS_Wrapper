@@ -15,8 +15,8 @@ TODO list:
 - [x] GameFS
 - [x] Message
 - [x] Multiplayer
-- [ ] PartnerPay
+- [ ] PartnerPay (This is discontinued, so do we actually need to implement this?)
 - [ ] PayVault
 - [ ] QuickConnect
-- [ ] SimpleGameFS class
-- [ ] RoomInfo class
+- [x] RoomInfo class
+- [ ] Yahoo

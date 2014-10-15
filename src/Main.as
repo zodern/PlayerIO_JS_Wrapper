@@ -221,8 +221,9 @@ package
 					// Get the RoomInfo
 					var info:RoomInfo = rooms[i];
 					
-					// Construct an object
-					var obj:Object = { data: info.data, id: info.id, onlineUsers: info.onlineUsers, roomType: info.roomType, serverType: info.serverType };
+					// Construct an array that holds the information
+					//var obj:Object = { data: info.data, id: info.id, onlineUsers: info.onlineUsers, roomType: info.roomType, serverType: info.serverType };
+					var obj:Array = [ info.data, info.id, info.onlineUsers, info.roomType, info.serverType ];
 					JSRooms[i] = obj;
 				}
 				

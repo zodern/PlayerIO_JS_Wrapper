@@ -24,6 +24,57 @@ var PlayerIOMessageTypeName =
 };
 
 // ================================= //
+// ===== RoomInfo system of PIO ==== //
+// ================================= //
+var RoomInfo = function()
+{
+	// Public
+	this.id = "";
+	this.serverType = "";
+	this.roomType = "";
+	this.onlineUsers = 0;
+	this.data = {};
+
+	// I suppose that this.initData == this.data
+	// (verify this?)
+	var self = this;
+	Object.defineProperty(this, "initData",
+	{
+		get: function()
+		{
+			return self.data;
+		}
+	});
+};
+
+RoomInfo.prototype.toString = function()
+{
+	var returnString = "";
+	returnString += "[playerio.RoomInfo]\n";
+	returnString += "id:\t\t\t\t" + this.id + "\n";
+	returnString += "roomType:\t\t" + this.roomType + "\n";
+	returnString += "onlineUsers:\t" + this.onlineUsers + "\n";
+	returnString += "initData\t\tId\t\t\t\t\t\tValue\n";
+
+	for(var key in this.initData)
+	{
+		var data = this.initData[key];
+
+		// Since a tab in the console = 8 chars, that means we need to divide the length by eight
+		// Division by eight is a bitshift to right by three because 2³ = 8
+		// It can be no more than six because that's the "distance" between "Id" and "Value"
+		var padding = "";
+		for(var i = 0; i < key.length >> 3 && i < 6; i++)
+			padding += "\t";
+
+		// Append
+		returnString += "\t\t\t\t" + key + padding + data + "\n";
+	}
+
+	return returnString;
+};
+
+// ================================= //
 // ====== Error system of PIO ====== //
 // ================================= //
 var PlayerIOError = function(message, id)
@@ -454,7 +505,35 @@ Multiplayer.prototype.listRooms = function(roomType, searchCriteria, resultLimit
 	},
 	function(data)
 	{
-		callback(data);
+		// Prepare an array for us
+		var callbackData = new Array(data.length);
+
+		// Flash gives us an array of arrays of data per room
+		for(var i = 0, l = data.length; i < l; i++)
+		{
+			// Get the info
+			var roomInformation = data[i];
+
+			// roomInformation	[0] = .data
+			// 					[1] = .id
+			//					[2] = .onlineUsers
+			//					[3] = .roomType
+			//					[4] = .serverType
+
+			// Reconstruct the data using the RoomInfo class
+			var info = new RoomInfo();
+			info.data = roomInformation[0];
+			info.id = roomInformation[1];
+			info.onlineUsers = roomInformation[2];
+			info.roomType = roomInformation[3];
+			info.serverType = roomInformation[4];
+
+			// Add it to the array
+			roomInformation.push(info);
+		}
+
+		// And callback!
+		callback(callbackData);
 	}, errorhandler, this._id, [ roomType, searchCriteria, resultLimit, resultOffset ]);
 };
 

@@ -48,12 +48,18 @@
 
 				connection.addMessageHandler("*", function(msg)
 				{
-					console.log(" -> got a message");
+					console.log(" -> I got a message");
 					console.log(msg);
 				});
 
 				// I do have a name!
-				connection.send("MyNameIs", "yow");
+				connection.send("MyNameIs", "Someone");
+
+				// List rooms
+				client.multiplayer.listRooms("MyCode", "", 0, 0, function(data)
+				{
+					console.log(data);
+				});
 			},
 			function(err)
 			{
