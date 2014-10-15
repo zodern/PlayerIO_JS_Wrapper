@@ -1,13 +1,16 @@
 "use strict";
 
+// ================================= //
+// ====== Message types of PIO ===== //
+// ================================= //
 var PlayerIOMessageType =
 {
-	STRING: 0,
-	INT: 1,
-	UINT: 2,
-	BOOL: 3,
-	NUMBER: 4,
-	BYTEARRAY: 5
+	STRING:		0,
+	INT:		1,
+	UINT:		2,
+	BOOL:		3,
+	NUMBER:		4,
+	BYTEARRAY:	5
 };
 
 var PlayerIOMessageTypeName =
@@ -18,6 +21,22 @@ var PlayerIOMessageTypeName =
 	3: "Boolean",
 	4: "Number",
 	5: "ByteArray"
+};
+
+// ================================= //
+// ====== Error system of PIO ====== //
+// ================================= //
+var PlayerIOError = function(message, id)
+{
+	// Public
+	this.name = "Error";
+	this.message = message;
+	this.errorID = id;
+};
+
+PlayerIOError.prototype.toString = function()
+{
+	return this.message;
 };
 
 // ================================= //
@@ -557,7 +576,9 @@ var PlayerIO =
 				return;
 
 			// Get message and errorcode
-			var error = { "name": data[0], "message": data[1], "errorID": data[2] };
+			//var error = { "name": data[0], "message": data[1], "errorID": data[2] };
+			var error = new PlayerIOError(data[1], data[2]);
+			error.name = data[0];
 			errorhandler(error);
 		};
 
