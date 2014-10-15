@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<title>JS_AS_PIOWRAPPER</title>
+	<meta name="description" content="" />
+	
+	<script src="js/swfobject.js"></script>
+	<script>
+		var flashvars = {
+		};
+		var params = {
+			menu: "false",
+			scale: "exactfit",
+			allowScriptAccess: "always"
+		};
+		var attributes = {
+			id:"JSASPIOWRAPPER"
+		};
+		swfobject.embedSWF(
+			"JSASPIOWRAPPER.swf", 
+			"altContent", "10px", "10px", "10.0.0", 
+			"expressInstall.swf", 
+			flashvars, params, attributes);
+	</script>
+	<script src="js/pio.js"></script>
+	<script>
+	function testPIO()
+	{
+		// Initialize the API
+		PlayerIO.initJS(document.getElementById("JSASPIOWRAPPER"));
+
+		// Actual test code
+		PlayerIO.connect("[insert game id]", "public", "testuser", "", "",
+		function(client)
+		{
+			console.log("Connected to PIO");
+			client.multiplayer.developmentServer = "localhost:8184";
+			
+			client.multiplayer.createJoinRoom("testroom", "MyCode", true, {}, {}, function(connection)
+			{
+				console.log("I'm connected to a room!");
+
+				connection.addDisconnectHandler(function()
+				{
+					console.log("This is a disconnect handler!");
+				});
+
+				connection.addMessageHandler("*", function(msg)
+				{
+					console.log(" -> got a message");
+					console.log(msg);
+				});
+
+				// I do have a name!
+				connection.send("MyNameIs", "yow");
+			},
+			function(err)
+			{
+				console.log(err);
+			});
+		},
+		function(err)
+		{
+			console.log(err);
+		});
+	}
+	</script>
+</head>
+<body>
+	<div id="altContent">
+		<h1>JS_AS_PIOWRAPPER</h1>
+		<p><a href="http://www.adobe.com/go/getflashplayer">Get Adobe Flash player</a></p>
+	</div>
+	<p>&nbsp;</p>
+	<button onclick="testPIO();">Test PIO</button>
+</body>
+</html>
