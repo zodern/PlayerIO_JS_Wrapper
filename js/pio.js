@@ -558,10 +558,10 @@ Multiplayer.prototype.listRooms = function(roomType, searchCriteria, resultLimit
 			var roomInformation = data[i];
 
 			// roomInformation[0] = .data
-			// 				  [1] = .id
-			//				  [2] = .onlineUsers
-			//				  [3] = .roomType
-			//				  [4] = .serverType
+			// 	              [1] = .id
+			//	              [2] = .onlineUsers
+			//	              [3] = .roomType
+			//	              [4] = .serverType
 
 			// Reconstruct the data using the RoomInfo class
 			var info = new RoomInfo();
@@ -742,7 +742,7 @@ var PlayerIO =
 		function(data)
 		{
 			// Create client instance
-			var client = new Client(data[0], data[1], data[2], data[3], data[4], data[5], data[6]);
+			var client = new Client(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]);
 			// 0 = client id
 			// 1 = connectUserId
 			// 2 = bigDB id
@@ -750,6 +750,7 @@ var PlayerIO =
 			// 4 = gameFS id
 			// 5 = multiplayer id
 			// 6 = payVault id
+			// 7 = partnerPay id
 
 			// Callback
 			callback(client);
