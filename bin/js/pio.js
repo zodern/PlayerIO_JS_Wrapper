@@ -24,6 +24,49 @@ var PlayerIOMessageTypeName =
 };
 
 // ================================= //
+// ==== PartnerPay system of PIO === //
+// ================================= //
+var PartnerPay = function(partnerPayId)
+{
+	// Internal
+	this._id = partnerPayId;
+
+	// Public
+	var self = this;
+	Object.defineProperty(this, "currentPartner",
+	{
+		get: function()
+		{
+			return PlayerIO._element.getCurrentPartner(self._id);
+		}
+	});
+};
+
+PartnerPay.prototype.setTag = function(partnerId, callback, errorhandler)
+{
+	PlayerIO._sendWithCallback(function(args)
+	{
+		PlayerIO._element.setTag(args[0], args[1], args[2]);
+	},
+	function(data)
+	{
+		callback();
+	}, errorhandler, this._id, [ partnerId ]);
+};
+
+PartnerPay.prototype.trigger = function(key, count, callback, errorhandler)
+{
+	PlayerIO._sendWithCallback(function(args)
+	{
+		PlayerIO._element.trigger(args[0], args[1], args[2], args[3]);
+	},
+	function(data)
+	{
+		callback();
+	}, errorhandler, this._id, [ key, count ]);
+};
+
+// ================================= //
 // ===== RoomInfo system of PIO ==== //
 // ================================= //
 var RoomInfo = function()
@@ -151,7 +194,7 @@ Message.prototype._get = function(index, expectedType)
 	if(index < 0 || index >= this._data.length)
 		return;
 
-	// Now check if the value at the given index IS a boolean
+	// Now check if the value at the given index is the expected type
 	var type = this._types[index];
 	if(type != expectedType)
 	{
@@ -514,11 +557,11 @@ Multiplayer.prototype.listRooms = function(roomType, searchCriteria, resultLimit
 			// Get the info
 			var roomInformation = data[i];
 
-			// roomInformation	[0] = .data
-			// 					[1] = .id
-			//					[2] = .onlineUsers
-			//					[3] = .roomType
-			//					[4] = .serverType
+			// roomInformation[0] = .data
+			// 				  [1] = .id
+			//				  [2] = .onlineUsers
+			//				  [3] = .roomType
+			//				  [4] = .serverType
 
 			// Reconstruct the data using the RoomInfo class
 			var info = new RoomInfo();
@@ -576,7 +619,7 @@ ErrorLog.prototype.writeError = function(error, details, stacktrace, extraData, 
 // ===== Client system of PIO ====== //
 // ================================= //
 
-var Client = function(clientId, connectUserId, bigDB_id, errorLog_id, gameFS_id, multiplayer_id, payVault_id)
+var Client = function(clientId, connectUserId, bigDB_id, errorLog_id, gameFS_id, multiplayer_id, payVault_id, partnerPay_id)
 {
 	// Internal
 	this._id = clientId;
@@ -585,6 +628,7 @@ var Client = function(clientId, connectUserId, bigDB_id, errorLog_id, gameFS_id,
 	this._gameFS_id = gameFS_id;
 	this._multiplayer_id = multiplayer_id;
 	this._payVault_id = payVault_id;
+	this._partnerPay_id = partnerPay_id;
 
 	// Public
 	this.connectUserId = connectUserId;
@@ -593,6 +637,7 @@ var Client = function(clientId, connectUserId, bigDB_id, errorLog_id, gameFS_id,
 	this.gameFS = null;
 	this.multiplayer = null;
 	this.payVault = null;
+	this.partnerPay = null;
 
 	// Init
 	this._init();
@@ -604,6 +649,7 @@ Client.prototype._init = function()
 	this.gameFS = new GameFS(this._gameFS_id);
 	this.errorLog = new ErrorLog(this._errorLog_id);
 	this.multiplayer = new Multiplayer(this._multiplayer_id);
+	this.partnerPay = new PartnerPay(this._partnerPay_id);
 };
 
 // ================================= //

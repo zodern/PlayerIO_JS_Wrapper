@@ -3,6 +3,7 @@ package
 	import flash.system.Security;
 	import flash.utils.ByteArray;
 	import playerio.Message;
+	import playerio.PartnerPay;
 	
 	import playerio.Connection;
 	import playerio.ErrorLog;
@@ -58,9 +59,11 @@ package
 				objectStorage[multiplayer_id] = client.multiplayer;
 				var payVault_id:uint = lastObjectId++;
 				objectStorage[payVault_id] = client.payVault;
+				var partnerPay_id:uint = lastObjectId++;
+				objectStorage[partnerPay_id] = client.partnerPay;
 				
 				// Return to JS world
-				ExternalInterface.call("PlayerIO._execCallbacks", callbackId, 0, [ id, client.connectUserId, bigDB_id, errorLog_id, gameFS_id, multiplayer_id, payVault_id ], false);
+				ExternalInterface.call("PlayerIO._execCallbacks", callbackId, 0, [ id, client.connectUserId, bigDB_id, errorLog_id, gameFS_id, multiplayer_id, payVault_id, partnerPay_id ], false);
 			},
 			function(error:PlayerIOError):void
 			{
@@ -222,7 +225,6 @@ package
 					var info:RoomInfo = rooms[i];
 					
 					// Construct an array that holds the information
-					//var obj:Object = { data: info.data, id: info.id, onlineUsers: info.onlineUsers, roomType: info.roomType, serverType: info.serverType };
 					var obj:Array = [ info.data, info.id, info.onlineUsers, info.roomType, info.serverType ];
 					JSRooms[i] = obj;
 				}
@@ -346,6 +348,51 @@ package
 			});
 		}
 		
+		private function getCurrentPartner(id:uint):String
+		{
+			// Get object
+			var obj:PartnerPay = objectStorage[id];
+			
+			// Process
+			return obj.currentPartner;
+		}
+		
+		private function setTag(partnerId:String, id:uint, callbackId:uint):void
+		{
+			// Get object
+			var obj:PartnerPay = objectStorage[id];
+			
+			// Process
+			obj.setTag(partnerId, function():void
+			{
+				// Return to JS world
+				ExternalInterface.call("PlayerIO._execCallbacks", callbackId, 0, -1, false);
+			},
+			function(error:PlayerIOError):void
+			{
+				// Return to JS world with passing information of the error
+				ExternalInterface.call("PlayerIO._execCallbacks", callbackId, 1, [ error.name, error.message, error.errorID ], false);
+			});
+		}
+		
+		private function trigger(key:String, count:uint, id:uint, callbackId:uint):void
+		{
+			// Get object
+			var obj:PartnerPay = objectStorage[id];
+			
+			// Process
+			obj.trigger(key, count, function():void
+			{
+				// Return to JS world
+				ExternalInterface.call("PlayerIO._execCallbacks", callbackId, 0, -1, false);
+			},
+			function(error:PlayerIOError):void
+			{
+				// Return to JS world with passing information of the error
+				ExternalInterface.call("PlayerIO._execCallbacks", callbackId, 1, [ error.name, error.message, error.errorID ], false);
+			});
+		}
+		
 		public function Main():void 
 		{
 			// Allow
@@ -380,6 +427,11 @@ package
 			ExternalInterface.addCallback("disconnect", disconnect);
 			ExternalInterface.addCallback("sendMessage", sendMessage);
 			ExternalInterface.addCallback("initConnection", initConnection);
+			
+			// PartnerPay class
+			ExternalInterface.addCallback("getCurrentPartner", getCurrentPartner);
+			ExternalInterface.addCallback("setTag", setTag);
+			ExternalInterface.addCallback("trigger", trigger);
 		}
 	}
 }

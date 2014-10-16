@@ -7,7 +7,7 @@ This was made so people can use the Player.IO API in Javascript using a Flash ba
 
 It is far from complete, but some things already work and I wanted to share my work if someone is interested.
 
-TODO list:
+Implementation TODO list:
 - [ ] BigDB
 - [x] Client
 - [x] Connection
@@ -15,8 +15,11 @@ TODO list:
 - [x] GameFS
 - [x] Message
 - [x] Multiplayer
-- [ ] PartnerPay (This is discontinued, so do we actually need to implement this?)
+- [x] PartnerPay (This is discontinued, so do we actually need to implement this?)
+      (Implemented for completeness)
 - [ ] PayVault
 - [ ] QuickConnect
 - [x] RoomInfo class
-- [ ] Yahoo
+- [ ] Yahoo related classes
+- [ ] GameRequests
+- [ ] Notifications
