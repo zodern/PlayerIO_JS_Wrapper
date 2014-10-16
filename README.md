@@ -25,15 +25,15 @@ Implementation TODO list:
 - [ ] Notification
 	- [ ] Notification
 	- [ ] Notifications
-- [x] PartnerPay (This is discontinued, so do we actually need to implement this?)
-      (Implemented for completeness)
+- [x] PartnerPay
+	(Implemented for completeness)
 - [ ] PayVault
 	- [ ] PayVaultHistoryEntry
 - [ ] PlayerInsight
 - [ ] QuickConnect
 - [x] RoomInfo
 - [ ] Yahoo
-	⁻ [ ] YahooPayments
+	- [ ] YahooPayments
 	- [ ] YahooProfile
 	- [ ] YahooProfiles
 	- [ ] YahooRelations

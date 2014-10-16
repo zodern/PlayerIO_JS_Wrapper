@@ -1,9 +1,5 @@
 package  
 {
-	/**
-	 * ...
-	 * @author Niels
-	 */
 	public class DataContainer 
 	{
 		public var data:Array;

@@ -1,9 +1,5 @@
 package  
 {
-	/**
-	 * ...
-	 * @author Niels
-	 */
 	public class PlayerIOMessageType 
 	{
 		public static const STRING:int = 0;
