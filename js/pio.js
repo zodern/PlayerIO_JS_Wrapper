@@ -572,7 +572,7 @@ Multiplayer.prototype.listRooms = function(roomType, searchCriteria, resultLimit
 			info.serverType = roomInformation[4];
 
 			// Add it to the array
-			roomInformation.push(info);
+			callbackData.push(info);
 		}
 
 		// And callback!
