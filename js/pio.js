@@ -269,6 +269,10 @@ Message.prototype.add = function()
 				}
 
 				break;
+				
+		 	case "boolean":
+        			this.addBoolean(arg);
+        			break;
 
 			case "object":
 				if(arg.length != undefined)
